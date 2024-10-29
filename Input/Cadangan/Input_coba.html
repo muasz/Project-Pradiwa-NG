@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pradiwa</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #015C9E, #12E5D7); /* Latar belakang gradien */
+            color: #333; /* Warna teks utama */
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: transparent; /* Membuat navbar transparan */
+            padding: 10px 20px;
+            position: relative; /* Mengatur posisi relatif untuk efek bayangan */
+            z-index: 10; /* Memastikan navbar di atas konten lainnya */
+            margin-top: 20px;
+        }
+
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .menu {
+            display: flex;
+            gap: 15px;
+        }
+
+        .menu a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s; /* Transisi halus untuk efek hover */
+        }
+
+        .menu a:hover {
+            color: #FFD700; /* Warna emas saat hover */
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 50px;
+            margin: 0 0 -105px;
+            color: #FFF; /* Warna biru untuk judul */
+            text-align: center;
+            
+        }
+
+        p {
+            font-size: 20px;
+            color: #FFF;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .form-container {
+            background: rgb(255, 255, 255   );
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 60%;
+            position: relative;
+        }
+        .form-container h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 5px;
+            border: 2px solid #000;
+            border-radius: 20px;
+            font-size: 1em;
+            background: rgba(255, 255, 255, 0.2);
+            color: #000;
+        }
+        .form-group input::placeholder, .form-group select::placeholder {
+            color: #000;
+        }
+        button {
+            background-color: #0288d1;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo">PRADIWA</div>
+        <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+        <div class="menu">
+            <a href="#">BERANDA</a>
+            <a href="#">TENTANG</a>
+            <a href="#">INPUT</a>
+            <a href="#">DATA NASABAH</a>
+            <a href="#">DATA SAMPAH</a>
+            <a href="#">LOGIN</a>
+        </div>
+    </div>
+
+    <h1>Input Data</h1>
+    <div class="container">
+        <div class="form-container">
+            <div class="form-group">
+                <label for="nama">Nama :</label>
+                <input type="text" id="nama" placeholder="Nama">
+            </div>
+            <div class="form-group">
+                <label for="alamat">Alamat :</label>
+                <input type="text" id="alamat" placeholder="Alamat">
+            </div>
+            <div class="form-group">
+                <label for="nibs">NIBS :</label>
+                <input type="number" id="nibs" placeholder="NIBS" max="14">
+            </div>
+            <div class="form-group">
+                <label for="date">Bulan & Tahun :</label>
+                <input type="date" id="date" placeholder="Date">
+            </div>
+            <div class="form-group">
+                <label for="jenis-sampah">Jenis Sampah:</label>
+                <select id="jenis-sampah" required>
+                    <optgroup label="Kertas">
+                        <option value="Duplex">Duplex</option>
+                        <option value="Kardus">Kardus</option>
+                        <option value="Koran">Koran</option>
+                        <option value="Majalah">Majalah</option>
+                        <option value="Lainnya (Kertas)">Lainnya (Kertas)</option>
+                    </optgroup>
+                    <optgroup label="Logam">
+                        <option value="Aluminium">Aluminium</option>
+                        <option value="Tembaga">Tembaga</option>
+                        <option value="Kuningan">Kuningan</option>
+                        <option value="Lainnya (Logam)">Lainnya (Logam)</option>
+                    </optgroup>
+                    <optgroup label="Plastik">
+                        <option value="Botol Plastik">Botol Plastik</option>
+                        <option value="Gelas Plastik">Gelas Plastik</option>
+                        <option value="Lainnya (Plastik)">Lainnya (Plastik)</option>
+                    </optgroup>
+                </select><br>
+                <div id="jenisSampahLainnyaField" style="display: none;">
+                    <label for="jenisSampahLainnya">Jenis Sampah Lainnya:</label>
+                    <input type="text" id="jenisSampahLainnya"><br>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="berat-sampah">Jumlah berat sampah:</label>
+                <div style="display: flex; align-items: center;">
+                    <input type="number" id="berat-sampah" placeholder="" min="0" step="0.1" style="margin-right: 10px;">
+                    <select id="satuan-berat">
+                        <option value="kilogram">Kilogram</option>
+                        <option value="buah">Buah</option>
+                    </select>
+                </div>
+            </div>
+            <button type="button" id="submit-btn">Tambah Data</button>
+        </div>
+        
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.querySelector('.navbar .menu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none ' : 'flex';
+        }
+    </script>
+
+</body>
+</html> 

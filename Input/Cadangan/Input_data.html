@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Sampah</title>
+    <style>
+        body {
+            background-color: #e0f7fa;
+            font-family: Arial, sans-serif;
+            color: #0277bd;
+            margin: 20px;
+        }
+        h1 {
+            color: #fff;
+            text-align: center;
+        }
+        form {
+            background-color: #b3e5fc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="date"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 10px 0;
+            border: 1px solid #0288d1;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #0288d1;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0277bd;
+        }
+        #data-display {
+            background-color: #e1f5fe;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        #data-display p {
+            margin: 10px 0;
+            color: #01579b;
+        }
+    </style>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getDatabase, ref, set, push, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCAKHCq3-KLwe1poPnlJUKIJJZsl7ehyZs",
+            authDomain: "data-47761.firebaseapp.com",
+            databaseURL: "https://data-47761-default-rtdb.firebaseio.com",
+            projectId: "data-47761",
+            storageBucket: "data-47761.appspot.com",
+            messagingSenderId: "541490330883",
+            appId: "1:541490330883:web:fd30a39ad0fa80fa2a3d36",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        function fetchUserData(userId) {
+            const userRef = ref(database, `users/${userId}`);
+            get(userRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    if (userData) {
+                        document.getElementById('nama').value = userData.nama || '';
+                        document.getElementById('alamat').value = userData.alamat || '';
+                        document.getElementById('nik').value = userData.nik || '';
+                    } else {
+                        document.getElementById('nama').value = '';
+                        document.getElementById('alamat').value = '';
+                        document.getElementById('nik').value = '';
+                    }
+                } else {
+                    document.getElementById('nama').value = '';
+                    document.getElementById('alamat').value = '';
+                    document.getElementById('nik').value = '';
+                }
+            }).catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
+        }
+
+        function addSampahData(userId, tanggal, jenisSampah, jenisSampahLainnya, berat) {
+            const sampahRef = ref(database, `sampah_per_tanggal/${tanggal}`);
+            const newEntryRef = push(sampahRef);
+
+            set(newEntryRef, {
+                userId: userId,
+                jenisSampah: jenisSampah,
+                jenisSampahLainnya: jenisSampahLainnya || '',
+                berat: berat
+            }).then(() => {
+                console.log('Sampah data added successfully');
+                alert('Data berhasil ditambahkan!');
+            }).catch((error) => {
+                console.error('Error adding data:', error);
+                alert('Terjadi kesalahan saat menambahkan data.');
+            });
+        }
+
+        function deleteSampahData(entryId, tanggal) {
+    const sampahRef = ref(database, `sampah_per_tanggal/${tanggal}/${entryId}`);
+    remove(sampahRef).then(() => {
+        console.log('Sampah data deleted successfully');
+        alert('Data berhasil dihapus!');
+        const entryElement = document.getElementById(`entry-${entryId}`);
+        if (entryElement) {
+            entryElement.parentNode.removeChild(entryElement);
+        }
+    }).catch((error) => {
+        console.error('Error deleting data:', error);
+        alert('Terjadi kesalahan saat menghapus data.');
+    });
+}
+
+
+function displaySampahData(tanggal) {
+    const sampahRef = ref(database, `sampah_per_tanggal/${tanggal}`);
+    get(sampahRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            let output = '<h2>Data Sampah pada ' + tanggal + '</h2>';
+            for (const entryId in data) {
+                const entry = data[entryId];
+                const userRef = ref(database, `users/${entry.userId}`);
+                get(userRef).then((userSnapshot) => {
+                    const userData = userSnapshot.val();
+                    if (userData) {
+                        output += `
+                            <p id="entry-${entryId}">
+                                User ID: ${entry.userId}<br>
+                                Nama: ${userData.nama || 'Tidak diketahui'}<br>
+                                Alamat: ${userData.alamat || 'Tidak diketahui'}<br>
+                                NIK: ${userData.nik || 'Tidak diketahui'}<br>
+                                Jenis Sampah: ${entry.jenisSampah}<br>
+                                Jenis Sampah Lainnya: ${entry.jenisSampahLainnya || 'Tidak ada'}<br>
+                                Berat: ${entry.berat} kg<br>
+                                <button class="hapus-btn" onclick="deleteSampahData('${entryId}', '${tanggal}')">Hapus</button>
+                            </p>
+                        `;
+                        document.getElementById('data-display').innerHTML = output;
+                    } else {
+                        console.error('User data is null');
+                    }
+                }).catch((error) => {
+                    console.error('Error fetching user data:', error);
+                });
+            }
+        } else {
+            document.getElementById('data-display').innerHTML = 'Tidak ada data untuk tanggal ini.';
+        }
+    }).catch((error) => {
+        console.error('Error fetching data:', error);
+    });
+}
+
+
+        window.onload = () => {
+            document.getElementById('user-id').addEventListener('input', (event) => {
+                fetchUserData(event.target.value);
+            });
+
+            document.getElementById('jenisSampah').addEventListener('change', (event) => {
+                const selectedValue = event.target.value;
+                const jenisSampahLainnyaField = document.getElementById('jenisSampahLainnyaField');
+                if (selectedValue === 'Lainnya (Kertas)' || selectedValue === 'Lainnya (Logam)' || selectedValue === 'Lainnya (Plastik)') {
+                    jenisSampahLainnyaField.style.display = 'block';
+                } else {
+                    jenisSampahLainnyaField.style.display = 'none';
+                }
+            });
+
+            document.getElementById('submit-btn').addEventListener('click', () => {
+                const userId = document.getElementById('user-id').value;
+                const tanggal = document.getElementById('tanggal').value;
+                const jenisSampah = document.getElementById('jenisSampah').value;
+                const jenisSampahLainnya = document.getElementById('jenisSampahLainnya').value;
+                const berat = parseFloat(document.getElementById('berat').value);
+
+                if (userId && tanggal && jenisSampah && !isNaN(berat)) {
+                    addSampahData(userId, tanggal, jenisSampah, jenisSampahLainnya, berat);
+                } else {
+                    alert('Harap lengkapi semua field dengan benar.');
+                }
+            });
+
+            document.getElementById('display-btn').addEventListener('click', () => {
+                const tanggal = document.getElementById('display-tanggal').value;
+                if (tanggal) {
+                    displaySampahData(tanggal);
+                } else {
+                    alert('Harap masukkan tanggal untuk menampilkan data.');
+                }
+            });
+        };
+    </script>
+</head>
+<body>
+    <h1>Input Data Sampah</h1>
+    <form id="input-form">
+        <label for="user-id">User ID:</label>
+        <input type="text" id="user-id" required><br>
+        <label for="nama">Nama:</label>
+        <input type="text" id="nama" readonly><br>
+        <label for="alamat">Alamat:</label>
+        <input type="text" id="alamat" readonly><br>
+        <label for="nik">NIK:</label>
+        <input type="text" id="nik" readonly><br>
+        <label for="tanggal">Tanggal:</label>
+        <input type="date" id="tanggal" required><br>
+        <label for="jenisSampah">Jenis Sampah:</label>
+        <select id="jenisSampah" required>
+            <optgroup label="Kertas">
+                <option value="Duplex">Duplex</option>
+                <option value="Kardus">Kardus</option>
+                <option value="Koran">Koran</option>
+                <option value="Majalah">Majalah</option>
+                <option value="Lainnya (Kertas)">Lainnya (Kertas)</option>
+            </optgroup>
+            <optgroup label="Logam">
+                <option value="Aluminium">Aluminium</option>
+                <option value="Tembaga">Tembaga</option>
+                <option value="Kuningan">Kuningan</option>
+                <option value="Lainnya (Logam)">Lainnya (Logam)</option>
+            </optgroup>
+            <optgroup label="Plastik">
+                <option value="Botol Plastik">Botol Plastik</option>
+                <option value="Gelas Plastik">Gelas Plastik</option>
+                <option value="Lainnya (Plastik)">Lainnya (Plastik)</option>
+            </optgroup>
+        </select><br>
+        <div id="jenisSampahLainnyaField" style="display: none;">
+            <label for="jenisSampahLainnya">Jenis Sampah Lainnya:</label>
+            <input type="text" id="jenisSampahLainnya"><br>
+        </div>
+        <label for="berat">Berat (kg):</label>
+        <input type="number" id="berat" step="0.01" required><br>
+        <button type="button" id="submit-btn">Tambah Data</button>
+    </form>
+
+    <h1>Tampilkan Data Sampah</h1>
+    <form id="display-form">
+        <label for="display-tanggal">Tanggal:</label>
+        <input type="date" id="display-tanggal" required><br>
+        <button type="button" id="display-btn">Tampilkan Data</button>
+    </form>
+    <div id="data-display"></div>
+</body>
+</html>

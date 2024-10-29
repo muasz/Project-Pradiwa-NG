@@ -1,0 +1,34 @@
+<html>
+<head>
+    <title>Sistem Informasi Management Sampah</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">PRADIWA</div>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+ <div class="menu">
+            <a href="http://localhost/Project%20Pradiwa%20NG/Home2/Home2.html#">Beranda</a>
+            <a href="http://localhost/Project%20Pradiwa%20NG/Tentang2/tentang2.html">Tentang</a>
+            <a href="http://localhost/Project%20Pradiwa%20NG/Login/Login.html">Login</a>
+        </div>
+    </div>
+    <div class="content">
+        <img alt="Illustration of two people cleaning up trash on a beach" height="400" src="https://storage.googleapis.com/a1aa/image/Whd0UmeSrqQ4SqdMATZpaAMmbnduES4Zt5Tcz38Kfw7AfVUnA.jpg" width="600"/>
+        <div class="text-container">
+            <h1>SELAMAT DATANG</h1>
+            <p>Sistem Informasi Management Sampah</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+             var menu = document.querySelector('.navbar .menu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none ' : 'flex'
+        }
+    </script>
+</body>
+</html>

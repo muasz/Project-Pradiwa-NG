@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pradiwa</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo">PRADIWA</div>
+        <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+        <div class="menu">
+            <a href="http://localhost/Project Pradiwa%20NG/Home/Home.html">BERANDA</a>
+            <a href="http://localhost/Project%20Pradiwa%20NG/Tentang/tentang.html">TENTANG</a>
+            <a href="#">INPUT</a>
+            <a href="#">DATA NASABAH</a>
+            <a href="#">DATA SAMPAH</a>
+            <a href="#">LOGIN</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <img alt="cleaning" src="Pungut Sampah.png"/>
+        <div>
+            <h1>SELAMAT DATANG</h1>
+            <p>Sistem Informasi Management Sampah</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.querySelector('.navbar .menu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none ' : 'flex';
+        }
+    </script>
+
+</body>
+</html>
